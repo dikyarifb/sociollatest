@@ -194,7 +194,7 @@
 	 	}
 	 	if(content.value == '')
 	 	{
-	 		showError('error-content', "*author must contain at least 1 characters", content);
+	 		showError('error-content', "*content must contain at least 1 characters", content);
 	 		return false;
 	 	}
 	 }

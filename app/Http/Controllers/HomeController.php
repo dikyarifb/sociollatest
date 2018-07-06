@@ -34,12 +34,12 @@ class HomeController extends Controller
             })->where('featured',1)->first();
             $data['posts'] = Post::whereHas('tags', function($q) use ($tag){
                 $q->where('slug', $tag);
-            })->where('featured',0)->get();
+            })->where('featured',0)->orderBy('id', 'DESC')->get();
         }
         else
         {
             $data['featured_post'] = Post::where('featured',1)->first();
-            $data['posts'] = Post::where('featured',0)->get();
+            $data['posts'] = Post::where('featured',0)->orderBy('id', 'DESC')->get();
             
         }
         return view('home', $data);
@@ -82,9 +82,13 @@ class HomeController extends Controller
             }
             if($request->has('featured'))
             {
-                $lastFeaturedPost = Post::where('featured',1)->first();
-                $lastFeaturedPost->featured = 0;
-                $lastFeaturedPost->save();
+                $lastFeaturedPost = Post::where('id', '<>', $post->id)->where('featured',1)->first();
+                if($lastFeaturedPost)
+                {
+                    $lastFeaturedPost->featured = 0;
+                    $lastFeaturedPost->save();
+                }
+                    
             }
             return redirect('/')->with([
                     'message'=> 'Success made a post',
